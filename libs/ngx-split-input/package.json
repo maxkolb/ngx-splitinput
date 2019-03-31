@@ -1,8 +1,32 @@
 {
-  "name": "@SplitInputLibrary/ngx-split-input",
+  "name": "ngx-splitinput",
+  "description": "Angular split input library, that enables you to build awesome OTP verification forms.",
   "version": "0.0.1",
+  "homepage": "https://github.com/maxkolb/ngx-splitinput",
+  "author": "Max Kolb (https://github.com/maxkolb)",
+  "license": "MIT",
+  "keywords": [
+    "ng",
+    "angular",
+    "library.splitinput",
+    "otp",
+    "verification",
+    "forms",
+    "split",
+    "partitioned",
+    "input"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maxkolb/ngx-splitinput.git"
+  },
+  "bugs": {
+    "url": "https://github.com/maxkolb/ngx-splitinput/issues"
+  },
+  "private": false,
   "peerDependencies": {
-    "@angular/common": "^7.2.0",
-    "@angular/core": "^7.2.0"
+    "@angular/common": "^7.0.0",
+    "@angular/core": "^7.0.0",
+    "rxjs": "^6.0.0"
   }
 }

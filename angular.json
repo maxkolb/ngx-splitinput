@@ -2,7 +2,164 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "newProjectRoot": "",
-  "projects": {},
+  "projects": {
+    "ngx-split-input": {
+      "root": "libs/ngx-split-input",
+      "sourceRoot": "libs/ngx-split-input/src",
+      "projectType": "library",
+      "prefix": "NgxSplit",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "libs/ngx-split-input/tsconfig.lib.json",
+            "project": "libs/ngx-split-input/ng-package.json"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/ngx-split-input/tsconfig.lib.json",
+              "libs/ngx-split-input/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/builders:jest",
+          "options": {
+            "jestConfig": "libs/ngx-split-input/jest.config.js",
+            "tsConfig": "libs/ngx-split-input/tsconfig.spec.json",
+            "setupFile": "libs/ngx-split-input/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/schematics:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "split-input-sample": {
+      "root": "apps/split-input-sample/",
+      "sourceRoot": "apps/split-input-sample/src",
+      "projectType": "application",
+      "prefix": "SplitInputLibrary",
+      "schematics": {
+        "@nrwl/schematics:component": {
+          "style": "scss"
+        }
+      },
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/split-input-sample",
+            "index": "apps/split-input-sample/src/index.html",
+            "main": "apps/split-input-sample/src/main.ts",
+            "polyfills": "apps/split-input-sample/src/polyfills.ts",
+            "tsConfig": "apps/split-input-sample/tsconfig.app.json",
+            "assets": [
+              "apps/split-input-sample/src/favicon.ico",
+              "apps/split-input-sample/src/assets"
+            ],
+            "styles": ["apps/split-input-sample/src/styles.scss"],
+            "scripts": [],
+            "es5BrowserSupport": true
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/split-input-sample/src/environments/environment.ts",
+                  "with": "apps/split-input-sample/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "split-input-sample:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "split-input-sample:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "split-input-sample:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/split-input-sample/tsconfig.app.json",
+              "apps/split-input-sample/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/builders:jest",
+          "options": {
+            "jestConfig": "apps/split-input-sample/jest.config.js",
+            "tsConfig": "apps/split-input-sample/tsconfig.spec.json",
+            "setupFile": "apps/split-input-sample/src/test-setup.ts"
+          }
+        }
+      }
+    },
+    "split-input-sample-e2e": {
+      "root": "apps/split-input-sample-e2e",
+      "projectType": "application",
+      "prefix": "",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/builders:cypress",
+          "options": {
+            "cypressConfig": "apps/split-input-sample-e2e/cypress.json",
+            "tsConfig": "apps/split-input-sample-e2e/tsconfig.e2e.json",
+            "devServerTarget": "split-input-sample:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "split-input-sample:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": "apps/split-input-sample-e2e/tsconfig.e2e.json",
+            "exclude": ["**/node_modules/**"]
+          }
+        }
+      }
+    }
+  },
   "cli": {
     "warnings": {
       "typescriptMismatch": false,
@@ -17,5 +174,6 @@
     "@nrwl/schematics:library": {
       "style": "scss"
     }
-  }
+  },
+  "defaultProject": "ngx-split-input"
 }

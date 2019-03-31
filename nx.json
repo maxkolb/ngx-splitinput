@@ -7,5 +7,15 @@
     "tslint.json": "*",
     "nx.json": "*"
   },
-  "projects": {}
+  "projects": {
+    "ngx-split-input": {
+      "tags": []
+    },
+    "split-input-sample": {
+      "tags": []
+    },
+    "split-input-sample-e2e": {
+      "tags": []
+    }
+  }
 }

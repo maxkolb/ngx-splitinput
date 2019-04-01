@@ -40,4 +40,4 @@ For an example implementation see the code of the [Sample App](https://github.co
 This section describes the inputs of the component. All inputs are optional.
 
 ### Inputs
-* `autofocus: boolean = false`: If set to `true` the first input element will be focused on page load.
+* `autofocus: boolean = true`: If set to `true` the first input element will be focused on page load.

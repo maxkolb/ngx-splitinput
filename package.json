@@ -1,7 +1,7 @@
 {
   "name": "ngx-splitinput",
   "description": "Angular split input library, that enables you to build awesome OTP verification forms.",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "homepage": "https://github.com/maxkolb/ngx-splitinput",
   "author": "Max Kolb (https://github.com/maxkolb)",
   "license": "MIT",
@@ -45,7 +45,18 @@
     "update:check": "ng update",
     "workspace-schematic": "./node_modules/.bin/nx workspace-schematic",
     "dep-graph": "./node_modules/.bin/nx dep-graph",
-    "help": "./node_modules/.bin/nx help"
+    "help": "./node_modules/.bin/nx help",
+    "copy-readme": "copy .\\README.md .\\dist\\libs\\ngx-split-input",
+    "copy-license": "copy .\\LICENSE .\\dist\\libs\\ngx-split-input",
+    "copy-files": "run-s copy-readme copy-license",
+    "bump-version:major": "npm version major --force && cd libs/ngx-split-input && npm version major --force",
+    "bump-version:minor": "npm version minor --force && cd libs/ngx-split-input && npm version minor --force",
+    "bump-version:patch": "npm version patch --force && cd libs/ngx-split-input && npm version patch --force",
+    "build:lib-pack": "ng build ngx-split-input && npm run copy-files && cd dist/libs/ngx-split-input && npm pack",
+    "commit-git": "git commit -m \"build: add new release\" && git push origin && git push origin --tags",
+    "pre-publish:minor": "run-s bump-version:minor build:lib-pack commit-git",
+    "pre-publish:major": "run-s bump-version:major build:lib-pack commit-git",
+    "pre-publish:patch": "run-s bump-version:patch build:lib-pack commit-git"
   },
   "private": false,
   "peerDependencies": {
@@ -67,27 +78,28 @@
     "zone.js": "^0.8.26"
   },
   "devDependencies": {
-    "jest-preset-angular": "7.0.0",
-    "@angular/compiler-cli": "~7.2.0",
-    "@angular/language-service": "^7.0.0",
     "@angular-devkit/build-angular": "~0.13.0",
-    "codelyzer": "~4.5.0",
-    "cypress": "3.1.0",
-    "@types/jquery": "3.3.6",
-    "@nrwl/builders": "7.7.2",
-    "jest": "24.1.0",
-    "@types/jest": "24.0.9",
     "@angular-devkit/build-ng-packagr": "~0.13.0",
     "@angular/cli": "7.3.1",
+    "@angular/compiler-cli": "~7.2.0",
+    "@angular/language-service": "^7.0.0",
+    "@nrwl/builders": "7.7.2",
     "@nrwl/schematics": "7.7.2",
+    "@types/jest": "24.0.9",
+    "@types/jquery": "3.3.6",
     "@types/node": "~8.9.4",
+    "codelyzer": "~4.5.0",
+    "cypress": "3.1.0",
     "dotenv": "6.2.0",
+    "jest": "24.1.0",
+    "jest-preset-angular": "7.0.0",
     "ng-packagr": "^4.2.0",
+    "npm-run-all": "^4.1.5",
+    "prettier": "1.15.2",
     "ts-node": "~7.0.0",
     "tsickle": ">=0.34.0",
     "tslib": "^1.9.0",
     "tslint": "~5.11.0",
-    "typescript": "3.2.2",
-    "prettier": "1.15.2"
+    "typescript": "3.2.2"
   }
 }

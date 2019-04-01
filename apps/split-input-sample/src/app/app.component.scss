@@ -1,0 +1,29 @@
+.otp-container {
+  width: 400px;
+  margin: 100px auto auto;
+  -webkit-box-shadow: 0 0 10px 0 rgba(0,0,0,0.12);
+  -moz-box-shadow: 0 0 10px 0 rgba(0,0,0,0.12);
+  box-shadow: 0 0 10px 0 rgba(0,0,0,0.12);
+  padding: 20px;
+  border-radius: 5px;
+  font-family: "Helvetica Neue", serif;
+  text-align: center;
+
+  .title {
+    margin-top: 0;
+  }
+
+  input {
+    width: 30px;
+    height: 40px;
+    border-radius: 5px;
+    border: 1px solid #e0e0e0;
+    margin-right: 10px;
+    font-size: 30px;
+    text-align: center;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}

@@ -1,7 +1,7 @@
 {
   "name": "ngx-splitinput",
   "description": "Angular split input library, that enables you to build awesome OTP verification forms.",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "homepage": "https://github.com/maxkolb/ngx-splitinput",
   "author": "Max Kolb (https://github.com/maxkolb)",
   "license": "MIT",

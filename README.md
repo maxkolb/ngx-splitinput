@@ -41,3 +41,4 @@ This section describes the inputs of the component. All inputs are optional.
 
 ### Inputs
 * `autofocus: boolean = true`: If set to `true` the first input element will be focused on page load.
+* `clipboard: boolean = true`: If set to `true` autofill for textual content from clipboard is enabled.

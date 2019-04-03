@@ -1,37 +1,56 @@
-import {Component, ContentChildren, OnInit, QueryList, AfterContentInit, ElementRef, Input} from '@angular/core';
+import {
+  Component,
+  ContentChildren,
+  OnInit,
+  QueryList,
+  AfterContentInit,
+  ElementRef,
+  Input,
+  OnDestroy
+} from '@angular/core';
 import {SplitInputDirective} from "../split-input.directive";
 import {SplitInputService} from "../split-input.service";
 import {SplitInputClipboardEvent, SplitInputKeyUpEvent} from "../model";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'ngx-split-input',
   templateUrl: './ngx-split-input.component.html',
   styleUrls: ['./ngx-split-input.component.scss']
 })
-export class NgxSplitInputComponent implements OnInit, AfterContentInit {
+export class NgxSplitInputComponent implements OnInit, AfterContentInit, OnDestroy {
 
-  @Input()
-  autofocus: Boolean = true;
+  @Input() autofocus: Boolean = true;
+  @Input() clipboard: Boolean = true;
 
-  @ContentChildren(SplitInputDirective)
-  splitInputElems: QueryList<SplitInputDirective>;
+  @ContentChildren(SplitInputDirective) splitInputElems: QueryList<SplitInputDirective>;
+
+  keyUpSubscription: Subscription;
+  clipboardSubscription: Subscription;
 
   constructor(private splitInputService: SplitInputService) { }
 
   ngOnInit() {
-    this.splitInputService.keyUp$.subscribe((e: SplitInputKeyUpEvent) => {
+    this.keyUpSubscription = this.splitInputService.keyUp$.subscribe((e: SplitInputKeyUpEvent) => {
       this.handleKeyUpEvent(e);
     });
 
-    this.splitInputService.clipboard$.subscribe((e: SplitInputClipboardEvent) => {
-      this.handleClipboardEvent(e);
-    });
+    if (this.clipboard) {
+      this.clipboardSubscription = this.splitInputService.clipboard$.subscribe((e: SplitInputClipboardEvent) => {
+        this.handleClipboardEvent(e);
+      });
+    }
   }
 
   ngAfterContentInit(): void {
     this.validateSplitInputElements();
 
     this.setupSplitInputElements();
+  }
+
+  ngOnDestroy(): void {
+    if (this.keyUpSubscription) this.keyUpSubscription.unsubscribe();
+    if (this.clipboardSubscription) this.clipboardSubscription.unsubscribe();
   }
 
   private setupSplitInputElements() {

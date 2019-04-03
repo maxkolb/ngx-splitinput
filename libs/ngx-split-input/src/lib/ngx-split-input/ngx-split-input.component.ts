@@ -27,10 +27,10 @@ export class NgxSplitInputComponent implements OnInit, AfterContentInit, OnDestr
 
   @ContentChildren(SplitInputDirective) splitInputElems: QueryList<SplitInputDirective>;
 
-  inputMaxLength = 0;
+  private inputMaxLength = 0;
 
-  keyUpSubscription: Subscription;
-  clipboardSubscription: Subscription;
+  private keyUpSubscription: Subscription;
+  private clipboardSubscription: Subscription;
 
   constructor(private splitInputService: SplitInputService) { }
 
@@ -57,6 +57,15 @@ export class NgxSplitInputComponent implements OnInit, AfterContentInit, OnDestr
   ngOnDestroy(): void {
     if (this.keyUpSubscription) this.keyUpSubscription.unsubscribe();
     if (this.clipboardSubscription) this.clipboardSubscription.unsubscribe();
+  }
+
+  // TODO - MOVE TO OWN SERVICE
+  public clearSplitInput() {
+    this.splitInputElems.forEach(elem => {
+      elem.elementRef.nativeElement.value = '';
+    });
+
+    this.splitInputElems.first.elementRef.nativeElement.focus();
   }
 
   private setInputMaxLength(): number {

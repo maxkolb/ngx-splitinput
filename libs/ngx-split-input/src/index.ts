@@ -1,1 +1,1 @@
-export * from './lib/ngx-split-input.module';
+export { NgxSplitInputModule } from './lib/ngx-split-input.module';

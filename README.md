@@ -42,3 +42,6 @@ This section describes the inputs of the component. All inputs are optional.
 ### Inputs
 * `autofocus: boolean = true`: If set to `true` the first input element will be focused on page load.
 * `clipboard: boolean = true`: If set to `true` autofill for textual content from clipboard is enabled.
+
+### Outputs
+* `completed: any`: Is emitted when the SplitInput fields are filled out completely and contains the concatenated value of the SplitInput fields.

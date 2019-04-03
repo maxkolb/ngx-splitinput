@@ -1,6 +1,6 @@
 <div class="otp-container">
   <h1 class="title">Enter Verification Code</h1>
-  <ngx-split-input>
+  <ngx-split-input (completed)="handleCompleted($event)">
     <input ngxSplitInput type="text" maxlength="1">
     <input ngxSplitInput type="text" maxlength="1">
     <input ngxSplitInput type="text" maxlength="1">

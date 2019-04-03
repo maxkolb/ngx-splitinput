@@ -6,7 +6,7 @@ import {
   AfterContentInit,
   ElementRef,
   Input,
-  OnDestroy
+  OnDestroy, Output, EventEmitter
 } from '@angular/core';
 import {SplitInputDirective} from "../split-input.directive";
 import {SplitInputService} from "../split-input.service";
@@ -22,6 +22,8 @@ export class NgxSplitInputComponent implements OnInit, AfterContentInit, OnDestr
 
   @Input() autofocus: Boolean = true;
   @Input() clipboard: Boolean = true;
+
+  @Output() completed: EventEmitter<any> = new EventEmitter();
 
   @ContentChildren(SplitInputDirective) splitInputElems: QueryList<SplitInputDirective>;
 
@@ -93,6 +95,7 @@ export class NgxSplitInputComponent implements OnInit, AfterContentInit, OnDestr
     }
 
     splitInputElementRefs[currentElementIndex].nativeElement.focus();
+    this.triggerValidation()
   }
 
   private handleKeyUpEvent(event: SplitInputKeyUpEvent) {
@@ -110,12 +113,33 @@ export class NgxSplitInputComponent implements OnInit, AfterContentInit, OnDestr
 
       const nextControl: ElementRef = splitInputElementRefs[currentElementIndex+1];
       nextControl.nativeElement.focus();
+      this.triggerValidation()
 
     } else if (elem.nativeElement.value.length === 0 && e.code === 'Backspace' && currentElementIndex !== 0) {
       e.preventDefault();
 
       const prevControl: ElementRef = splitInputElementRefs[currentElementIndex-1];
       prevControl.nativeElement.focus();
+      this.triggerValidation()
     }
+  }
+
+  private triggerValidation() {
+    let inputValue = '';
+    let inputMaxLength = 0;
+
+    for (const elem of this.splitInputElems.toArray()) {
+      const value = elem.elementRef.nativeElement.value;
+      const maxLength = elem.elementRef.nativeElement.maxLength;
+      inputMaxLength += maxLength;
+
+      if (value === undefined || value.trim().length !== maxLength) {
+        break;
+      } else {
+        inputValue += value;
+      }
+    }
+
+    if (inputValue.length === inputMaxLength) this.completed.emit(inputValue);
   }
 }

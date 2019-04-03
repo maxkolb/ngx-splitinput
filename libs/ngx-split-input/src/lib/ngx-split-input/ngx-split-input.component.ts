@@ -27,6 +27,8 @@ export class NgxSplitInputComponent implements OnInit, AfterContentInit, OnDestr
 
   @ContentChildren(SplitInputDirective) splitInputElems: QueryList<SplitInputDirective>;
 
+  inputMaxLength = 0;
+
   keyUpSubscription: Subscription;
   clipboardSubscription: Subscription;
 
@@ -48,11 +50,23 @@ export class NgxSplitInputComponent implements OnInit, AfterContentInit, OnDestr
     this.validateSplitInputElements();
 
     this.setupSplitInputElements();
+
+    this.inputMaxLength = this.setInputMaxLength();
   }
 
   ngOnDestroy(): void {
     if (this.keyUpSubscription) this.keyUpSubscription.unsubscribe();
     if (this.clipboardSubscription) this.clipboardSubscription.unsubscribe();
+  }
+
+  private setInputMaxLength(): number {
+    const maxLengthArray = this.splitInputElems.map(elem => {
+      return elem.elementRef.nativeElement.maxLength;
+    });
+
+    return maxLengthArray.reduce((a, b) => {
+      return a + b;
+    }, 0);
   }
 
   private setupSplitInputElements() {
@@ -113,25 +127,25 @@ export class NgxSplitInputComponent implements OnInit, AfterContentInit, OnDestr
 
       const nextControl: ElementRef = splitInputElementRefs[currentElementIndex+1];
       nextControl.nativeElement.focus();
-      this.triggerValidation()
 
     } else if (elem.nativeElement.value.length === 0 && e.code === 'Backspace' && currentElementIndex !== 0) {
       e.preventDefault();
 
       const prevControl: ElementRef = splitInputElementRefs[currentElementIndex-1];
       prevControl.nativeElement.focus();
-      this.triggerValidation()
+    }
+
+    if (e.key !== 'Meta') {
+      this.triggerValidation();
     }
   }
 
   private triggerValidation() {
     let inputValue = '';
-    let inputMaxLength = 0;
 
     for (const elem of this.splitInputElems.toArray()) {
       const value = elem.elementRef.nativeElement.value;
       const maxLength = elem.elementRef.nativeElement.maxLength;
-      inputMaxLength += maxLength;
 
       if (value === undefined || value.trim().length !== maxLength) {
         break;
@@ -140,6 +154,6 @@ export class NgxSplitInputComponent implements OnInit, AfterContentInit, OnDestr
       }
     }
 
-    if (inputValue.length === inputMaxLength) this.completed.emit(inputValue);
+    if (inputValue.length === this.inputMaxLength) this.completed.emit(inputValue);
   }
 }

@@ -9,3 +9,13 @@ export class SplitInputKeyUpEvent {
     this.element = element;
   }
 }
+
+export class SplitInputClipboardEvent {
+  clipboardEvent: ClipboardEvent;
+  element: ElementRef;
+
+  constructor(clipboardEvent: ClipboardEvent, element: ElementRef<any>) {
+    this.clipboardEvent = clipboardEvent;
+    this.element = element;
+  }
+}

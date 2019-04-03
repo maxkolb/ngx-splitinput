@@ -19,6 +19,12 @@ export class SplitInputDirective implements OnInit {
     this.splitInputService.keyUp(e, this._elementRef);
   }
 
+  @HostListener('paste', ['$event'])
+  onPaste(e: ClipboardEvent) {
+    this.splitInputService.clipboard(e, this._elementRef);
+  }
+
+
   get elementRef(): ElementRef<any> {
     return this._elementRef;
   }

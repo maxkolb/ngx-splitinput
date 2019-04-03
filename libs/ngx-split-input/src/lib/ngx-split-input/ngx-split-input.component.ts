@@ -1,7 +1,7 @@
 import {Component, ContentChildren, OnInit, QueryList, AfterContentInit, ElementRef, Input} from '@angular/core';
 import {SplitInputDirective} from "../split-input.directive";
 import {SplitInputService} from "../split-input.service";
-import {SplitInputKeyUpEvent} from "../model";
+import {SplitInputClipboardEvent, SplitInputKeyUpEvent} from "../model";
 
 @Component({
   selector: 'ngx-split-input',
@@ -21,6 +21,10 @@ export class NgxSplitInputComponent implements OnInit, AfterContentInit {
   ngOnInit() {
     this.splitInputService.keyUp$.subscribe((e: SplitInputKeyUpEvent) => {
       this.handleKeyUpEvent(e);
+    });
+
+    this.splitInputService.clipboard$.subscribe((e: SplitInputClipboardEvent) => {
+      this.handleClipboardEvent(e);
     });
   }
 
@@ -44,6 +48,34 @@ export class NgxSplitInputComponent implements OnInit, AfterContentInit {
     });
   }
 
+  private handleClipboardEvent(event: SplitInputClipboardEvent) {
+    const e = event.clipboardEvent;
+    const elem = event.element;
+    let clipboardData = e.clipboardData.getData('text');
+
+    // Find current element
+    const splitInputElementRefs = this.splitInputElems.map(element => {
+      return element.elementRef;
+    });
+
+    const currentElementIndex: number = splitInputElementRefs.indexOf(elem);
+
+    // remove content
+    splitInputElementRefs[currentElementIndex].nativeElement.value = '';
+
+    // for elems insert maxlength
+    const remainingElements: number = this.splitInputElems.length - currentElementIndex;
+
+    for (let i = 0; i < remainingElements; i++) {
+      const focusElem = splitInputElementRefs[currentElementIndex+i].nativeElement;
+      const elemMaxLength = focusElem.maxLength;
+      focusElem.value = clipboardData.substring(0, elemMaxLength);
+      clipboardData = clipboardData.slice(elemMaxLength);
+    }
+
+    splitInputElementRefs[currentElementIndex].nativeElement.focus();
+  }
+
   private handleKeyUpEvent(event: SplitInputKeyUpEvent) {
     const e = event.keyboardEvent;
     const elem = event.element;
@@ -53,8 +85,8 @@ export class NgxSplitInputComponent implements OnInit, AfterContentInit {
     });
 
     const currentElementIndex = splitInputElementRefs.indexOf(elem);
-    
-    if (elem.nativeElement.maxLength === elem.nativeElement.value.length && currentElementIndex !== this.splitInputElems.length - 1) {
+
+    if (elem.nativeElement.maxLength === elem.nativeElement.value.length && currentElementIndex !== this.splitInputElems.length - 1 && e.key !== 'Meta') {
       e.preventDefault();
 
       const nextControl: ElementRef = splitInputElementRefs[currentElementIndex+1];

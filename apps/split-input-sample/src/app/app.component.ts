@@ -12,6 +12,6 @@ export class AppComponent {
 
   handleCompleted(event: any): void {
     console.log(event);
-    this.splitInputService.clearSplitIpnut();
+    this.splitInputService.clearSplitInput();
   }
 }

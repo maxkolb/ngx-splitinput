@@ -11,7 +11,7 @@ export class SplitInputService {
   private _onSplitInputCleared: Observable<any> = this._clearSplitInputSource.asObservable();
 
   /** Trigger clearing of a SplitInput */
-  clearSplitIpnut(): void {
+  clearSplitInput(): void {
     this._clearSplitInputSource.next();
   }
 

@@ -9,9 +9,10 @@ import {
   OnDestroy, Output, EventEmitter
 } from '@angular/core';
 import {SplitInputDirective} from "../split-input.directive";
-import {SplitInputService} from "../split-input.service";
+import {SplitInputEventHandlerService} from "../split-input-event-handler.service";
 import {SplitInputClipboardEvent, SplitInputKeyUpEvent} from "../model";
 import {Subscription} from "rxjs";
+import {SplitInputService} from "../split-input.service";
 
 @Component({
   selector: 'ngx-split-input',
@@ -27,20 +28,26 @@ export class NgxSplitInputComponent implements OnInit, AfterContentInit, OnDestr
 
   @ContentChildren(SplitInputDirective) splitInputElems: QueryList<SplitInputDirective>;
 
-  private inputMaxLength = 0;
+  private _inputMaxLength = 0;
 
-  private keyUpSubscription: Subscription;
-  private clipboardSubscription: Subscription;
+  private _keyUpSubscription: Subscription;
+  private _clipboardSubscription: Subscription;
+  private _clearSplitInputSubscription: Subscription;
 
-  constructor(private splitInputService: SplitInputService) { }
+  constructor(private splitInputEventHandlerService: SplitInputEventHandlerService,
+              private splitInputService: SplitInputService) { }
 
-  ngOnInit() {
-    this.keyUpSubscription = this.splitInputService.keyUp$.subscribe((e: SplitInputKeyUpEvent) => {
+  ngOnInit(): void {
+    this._keyUpSubscription = this.splitInputEventHandlerService.keyUp$.subscribe((e: SplitInputKeyUpEvent) => {
       this.handleKeyUpEvent(e);
     });
 
+    this._clearSplitInputSubscription = this.splitInputService.onSplitInputCleared.subscribe(() => {
+      this.clearSplitInput();
+    });
+
     if (this.clipboard) {
-      this.clipboardSubscription = this.splitInputService.clipboard$.subscribe((e: SplitInputClipboardEvent) => {
+      this._clipboardSubscription = this.splitInputEventHandlerService.clipboard$.subscribe((e: SplitInputClipboardEvent) => {
         this.handleClipboardEvent(e);
       });
     }
@@ -51,16 +58,16 @@ export class NgxSplitInputComponent implements OnInit, AfterContentInit, OnDestr
 
     this.setupSplitInputElements();
 
-    this.inputMaxLength = this.setInputMaxLength();
+    this._inputMaxLength = this.setInputMaxLength();
   }
 
   ngOnDestroy(): void {
-    if (this.keyUpSubscription) this.keyUpSubscription.unsubscribe();
-    if (this.clipboardSubscription) this.clipboardSubscription.unsubscribe();
+    if (this._keyUpSubscription) this._keyUpSubscription.unsubscribe();
+    if (this._clipboardSubscription) this._clipboardSubscription.unsubscribe();
+    if (this._clearSplitInputSubscription) this._clearSplitInputSubscription.unsubscribe();
   }
 
-  // TODO - MOVE TO OWN SERVICE
-  public clearSplitInput() {
+  private clearSplitInput() {
     this.splitInputElems.forEach(elem => {
       elem.elementRef.nativeElement.value = '';
     });
@@ -78,13 +85,13 @@ export class NgxSplitInputComponent implements OnInit, AfterContentInit, OnDestr
     }, 0);
   }
 
-  private setupSplitInputElements() {
+  private setupSplitInputElements(): void {
     if (this.autofocus) {
       this.splitInputElems.first.elementRef.nativeElement.autofocus = true;
     }
   }
 
-  private validateSplitInputElements() {
+  private validateSplitInputElements(): void {
     this.splitInputElems.forEach(elem => {
       if (elem.elementRef.nativeElement.localName !== 'input') throw new Error('ngxSplitInput directive can only be used on "input" elements');
       if (!(elem.elementRef.nativeElement.type === 'text' || elem.elementRef.nativeElement.type === 'number')) throw new Error('ngxSplitInput only supports input elements with type "text" or "number"');
@@ -92,7 +99,7 @@ export class NgxSplitInputComponent implements OnInit, AfterContentInit, OnDestr
     });
   }
 
-  private handleClipboardEvent(event: SplitInputClipboardEvent) {
+  private handleClipboardEvent(event: SplitInputClipboardEvent): void {
     const e = event.clipboardEvent;
     const elem = event.element;
     let clipboardData = e.clipboardData.getData('text');
@@ -121,7 +128,7 @@ export class NgxSplitInputComponent implements OnInit, AfterContentInit, OnDestr
     this.triggerValidation()
   }
 
-  private handleKeyUpEvent(event: SplitInputKeyUpEvent) {
+  private handleKeyUpEvent(event: SplitInputKeyUpEvent): void {
     const e = event.keyboardEvent;
     const elem = event.element;
 
@@ -149,7 +156,7 @@ export class NgxSplitInputComponent implements OnInit, AfterContentInit, OnDestr
     }
   }
 
-  private triggerValidation() {
+  private triggerValidation(): void {
     let inputValue = '';
 
     for (const elem of this.splitInputElems.toArray()) {
@@ -163,6 +170,6 @@ export class NgxSplitInputComponent implements OnInit, AfterContentInit, OnDestr
       }
     }
 
-    if (inputValue.length === this.inputMaxLength) this.completed.emit(inputValue);
+    if (inputValue.length === this._inputMaxLength) this.completed.emit(inputValue);
   }
 }

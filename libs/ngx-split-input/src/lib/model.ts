@@ -1,21 +1,37 @@
 import {ElementRef} from "@angular/core";
 
 export class SplitInputKeyUpEvent {
-  keyboardEvent: KeyboardEvent;
-  element: ElementRef;
+  private readonly _keyboardEvent: KeyboardEvent;
+  private readonly _element: ElementRef;
 
   constructor(keyboardEvent: KeyboardEvent, element: ElementRef<any>) {
-    this.keyboardEvent = keyboardEvent;
-    this.element = element;
+    this._keyboardEvent = keyboardEvent;
+    this._element = element;
+  }
+
+  get keyboardEvent(): KeyboardEvent {
+    return this._keyboardEvent;
+  }
+
+  get element(): ElementRef<any> {
+    return this._element;
   }
 }
 
 export class SplitInputClipboardEvent {
-  clipboardEvent: ClipboardEvent;
-  element: ElementRef;
+  private readonly _clipboardEvent: ClipboardEvent;
+  private readonly _element: ElementRef;
 
   constructor(clipboardEvent: ClipboardEvent, element: ElementRef<any>) {
-    this.clipboardEvent = clipboardEvent;
-    this.element = element;
+    this._clipboardEvent = clipboardEvent;
+    this._element = element;
+  }
+
+  get clipboardEvent(): ClipboardEvent {
+    return this._clipboardEvent;
+  }
+
+  get element(): ElementRef<any> {
+    return this._element;
   }
 }

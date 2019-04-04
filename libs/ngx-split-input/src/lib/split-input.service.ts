@@ -1,5 +1,5 @@
 import {ElementRef, Injectable} from '@angular/core';
-import {Subject} from "rxjs";
+import {Observable, Subject} from "rxjs";
 import {SplitInputClipboardEvent, SplitInputKeyUpEvent} from "./model";
 
 @Injectable({
@@ -7,20 +7,16 @@ import {SplitInputClipboardEvent, SplitInputKeyUpEvent} from "./model";
 })
 export class SplitInputService {
 
-  // Observable string sources
-  private keyUpSource = new Subject<SplitInputKeyUpEvent>();
-  private clipboardSource = new Subject<SplitInputClipboardEvent>();
+  private _clearSplitInputSource = new Subject<any>();
+  private _onSplitInputCleared: Observable<any> = this._clearSplitInputSource.asObservable();
 
-  // Observable string streams
-  keyUp$ = this.keyUpSource.asObservable();
-  clipboard$ = this.clipboardSource.asObservable();
-
-  // Service message commands
-  keyUp(e: KeyboardEvent, elem: ElementRef) {
-    this.keyUpSource.next(new SplitInputKeyUpEvent(e, elem));
+  /** Trigger clearing of a SplitInput */
+  clearSplitIpnut(): void {
+    this._clearSplitInputSource.next();
   }
 
-  clipboard(e: ClipboardEvent, elem: ElementRef) {
-    this.clipboardSource.next(new SplitInputClipboardEvent(e, elem));
+  /** Emits when a SplitInput has been cleared. */
+  get onSplitInputCleared(): Observable<any> {
+    return this._onSplitInputCleared;
   }
 }

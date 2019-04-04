@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { SplitInputService } from './split-input.service';
+import { SplitInputEventHandlerService } from './split-input.service';
 
 describe('SplitInputService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: SplitInputService = TestBed.get(SplitInputService);
+    const service: SplitInputEventHandlerService = TestBed.get(SplitInputEventHandlerService);
     expect(service).toBeTruthy();
   });
 });

@@ -32,7 +32,7 @@
     </ngx-split-input>
     ```
 
-Currently only input elements of type 'text' or 'number' are supported. The `ngxSplitInput` directive has to be places on every input element contained in the SplitInput component. The 'type' and 'maxlength' arguments are required for every input.
+Currently only input elements of type 'text', 'number' and 'password' are supported. The `ngxSplitInput` directive has to be places on every input element contained in the SplitInput component. The 'type' and 'maxlength' arguments are required for every input.
 
 For an example implementation see the code of the [Sample App](https://github.com/maxkolb/ngx-splitinput/tree/master/apps/split-input-sample).
 

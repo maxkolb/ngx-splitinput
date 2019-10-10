@@ -94,7 +94,7 @@ export class NgxSplitInputComponent implements OnInit, AfterContentInit, OnDestr
   private validateSplitInputElements(): void {
     this.splitInputElems.forEach(elem => {
       if (elem.elementRef.nativeElement.localName !== 'input') throw new Error('ngxSplitInput directive can only be used on "input" elements');
-      if (!(elem.elementRef.nativeElement.type === 'text' || elem.elementRef.nativeElement.type === 'number')) throw new Error('ngxSplitInput only supports input elements with type "text" or "number"');
+      if (!(elem.elementRef.nativeElement.type === 'text' || elem.elementRef.nativeElement.type === 'number' || elem.elementRef.nativeElement.type === 'password')) throw new Error('ngxSplitInput only supports input elements with type "text", "number" or "password"');
       if (elem.elementRef.nativeElement.maxLength === -1) throw new Error('"maxLength" attribute has to be defined for ngxSplitInput elements');
     });
   }
